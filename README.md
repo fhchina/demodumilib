@@ -1,6 +1,6 @@
 # Ant-Design-Pro-Shell
 
-Ant-Design-Pro-Shell React Component Library, with TypeScipe, Ant Design, Ant Design Pro, ProComponents and Dumi support
+Ant-Design-Pro-Shell React Component Library, with TypeScript, Ant Design, Ant Design Pro, ProComponents and Dumi+father-build support
 
 ## Getting Started
 
