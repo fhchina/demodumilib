@@ -8,8 +8,9 @@
     "types": ["jest"],
     "strict": true,
     "skipLibCheck": true,
+	"allowSyntheticDefaultImports": true,
     "declaration": true,
-	"declarationDir": "./dist/esm",
+	// "declarationDir": "./dist/esm",
 	// "emitDeclarationOnly": true,
     "paths": {
       "@/*": ["./src/*"],
@@ -31,5 +32,5 @@
     "jest.config.js",
     "mock/*"
   ],
-  "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"]
+  "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "jest"]
 }

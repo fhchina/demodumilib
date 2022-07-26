@@ -7,6 +7,7 @@ import type { NoticeIconTabProps } from './NoticeList';
 import NoticeList from './NoticeList';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import * as API from '@/services/ant-design-pro/typings'
 
 const { TabPane } = Tabs;
 

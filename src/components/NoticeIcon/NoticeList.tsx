@@ -3,6 +3,7 @@ import { Avatar, List } from 'antd';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './NoticeList.less';
+import * as API from '@/services/ant-design-pro/typings'
 
 export type NoticeIconTabProps = {
   count?: number;

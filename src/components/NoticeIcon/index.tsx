@@ -7,6 +7,7 @@ import { getNotices } from '@/services/ant-design-pro/api';
 
 import NoticeIcon from './NoticeIcon';
 import styles from './index.less';
+import * as API from '@/services/ant-design-pro/typings'
 
 export type GlobalHeaderRightProps = {
   fetchingNotices?: boolean;
