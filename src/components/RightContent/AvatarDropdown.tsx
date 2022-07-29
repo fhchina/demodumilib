@@ -47,7 +47,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   );
 
   const loading = (
-    <span className={`${styles.action} ${styles.account}`}>
+    <span className={`${styles.action} ${styles.account}`} >
       <Spin
         size="small"
         style={{

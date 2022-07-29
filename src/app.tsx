@@ -6,7 +6,6 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import * as API from '@/services/ant-design-pro/typings'
-// import './services/ant-design-pro/'
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from './settings';
 
@@ -32,7 +31,8 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser();
       return msg.data;
     } catch (error) {
-      history.push(loginPath);
+	  console.log(error)
+      history.push(loginPath)
     }
     return undefined;
   };
@@ -63,6 +63,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
+	//   console.log("RuntimeLayout onPageChange: ")
+	//   console.log(initialState)
+	//   console.log(initialState?.currentUser)
+	//   console.log(location.pathname)
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
@@ -84,7 +88,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
       return (
         <>
           {children}
