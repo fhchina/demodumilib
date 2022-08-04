@@ -60,19 +60,10 @@ const Login: React.FC = () => {
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) {
 			console.log("history is null " + history)
-			// const defaultLoginFailureMessage = intl.formatMessage({
-			// 	id: 'pages.login.nohistory',
-			// 	defaultMessage: '没有history对象！！',
-			//   });
-			//   message.error(defaultLoginFailureMessage);
 			return;
 		}
         const { query } = history.location;
-		// console.log(`history.location: ${query}`)
-		// console.log(history)
         const { redirect } = query as { redirect: string }
-		// console.log(`redirect: ${redirect}`)
-		// console.log(`redirected to: ${redirect || '/'}`)
         history.push(redirect || '/');
         return;
       }
