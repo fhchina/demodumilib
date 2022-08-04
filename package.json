@@ -1,6 +1,6 @@
 {
   "name": "@fanghao/ant-design-pro-shell",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
