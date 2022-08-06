@@ -1,0 +1,8 @@
+
+import { Authenticator } from "./authenticator"
+
+export class KeycloakAuthenticator implements Authenticator {
+
+	constructor(private keycloak: Keycloak)
+
+}

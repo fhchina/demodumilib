@@ -4,13 +4,13 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import * as API from '@/services/ant-design-pro/typings'
+
+// import * as API from '@/services/ant-design-pro/typings'
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from './settings';
-
-const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+import { Authenticator } from '@/services/authentication/authenticator'
+import { LocalAuthenticator } from '@/services/authentication/localauthenticator'
+import { loginPath, isDev } from '@/constants'
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -21,34 +21,39 @@ export const initialStateConfig = {
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<{
-  settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
-  loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  settings?: Partial<LayoutSettings>
+  authenticator?: Authenticator
+//   currentUser?: API.CurrentUser;
+  loading?: boolean
+//   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  const fetchUserInfo = async () => {
-    try {
-      const msg = await queryCurrentUser();
-      return msg.data;
-    } catch (error) {
-	  console.log(error)
-      history.push(loginPath)
-    }
-    return undefined;
-  };
-  // 如果不是登录页面，执行
-  if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
     return {
-      fetchUserInfo,
-      currentUser,
-      settings: defaultSettings,
-    };
-  }
-  return {
-    fetchUserInfo,
-    settings: defaultSettings,
-  };
+	  settings: defaultSettings,
+	  authenticator: new LocalAuthenticator(loginPath),
+	}
+//   const fetchUserInfo = async () => {
+//     try {
+//       const msg = await queryCurrentUser();
+//       return msg.data;
+//     } catch (error) {
+// 	  console.log(error)
+//       history.push(loginPath)
+//     }
+//     return undefined;
+//   };
+//   // 如果不是登录页面，执行
+//   if (history.location.pathname !== loginPath) {
+//     const currentUser = await fetchUserInfo();
+//     return {
+//       fetchUserInfo,
+//       currentUser,
+//       settings: defaultSettings,
+//     };
+//   }
+//   return {
+//     fetchUserInfo,
+//     settings: defaultSettings,
+//   };
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
@@ -57,19 +62,23 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+    //   content: initialState?.currentUser?.name,
+	  content: initialState?.authenticator?.subject?.name
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
-      const { location } = history;
+      
       // 如果没有登录，重定向到 login
 	//   console.log("RuntimeLayout onPageChange: ")
 	//   console.log(initialState)
 	//   console.log(initialState?.currentUser)
 	//   console.log(location.pathname)
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
+	  if (initialState && !initialState.authenticator?.authenticated) {
+		initialState.authenticator?.login()
+	  }
+    //   if (!initialState?.currentUser && location.pathname !== loginPath) {
+    //     history.push(loginPath);
+    //   }
     },
     links: isDev
       ? [

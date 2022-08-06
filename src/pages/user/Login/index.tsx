@@ -11,10 +11,11 @@ import React, { useState } from 'react';
 import { ProFormCaptcha, ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 import { useIntl, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
+import { login, currentUser as queryCurrentUser  } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import * as API from '@/services/ant-design-pro/typings'
-import styles from './index.less';
+import styles from './index.less'
+import { loginPath } from '@/constants'
 
 const LoginMessage: React.FC<{
   content: string;
@@ -29,20 +30,33 @@ const LoginMessage: React.FC<{
   />
 );
 
+const fetchUserInfo = async () => {
+  try {
+    const msg = await queryCurrentUser();
+    return msg.data;
+  } catch (error) {
+    console.log(error);
+    history.push(loginPath);
+  }
+  return undefined;
+};
+
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState/*, setInitialState */} = useModel('@@initialState');
 
   const intl = useIntl();
+  const authenticator = initialState!.authenticator!
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
+  const ensureUserInfo = async () => {
+    const userInfo = await fetchUserInfo();
     if (userInfo) {
-      await setInitialState((s) => ({
-        ...s,
-        currentUser: userInfo,
-      }));
+    //   await setInitialState((s) => ({
+    //     ...s,
+    //     currentUser: userInfo,
+    //   }));
+	  authenticator.subject = userInfo
     }
   };
 
@@ -56,7 +70,7 @@ const Login: React.FC = () => {
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+        await ensureUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) {
 			console.log("history is null " + history)

@@ -37,7 +37,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
+		initialState!.authenticator!.subject = undefined
+        // setInitialState((s) => ({ ...s, currentUser: undefined }));
         loginOut();
         return;
       }
@@ -62,7 +63,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const { currentUser } = initialState;
+  const currentUser = initialState?.authenticator?.subject;
 
   if (!currentUser || !currentUser.name) {
     return loading;
