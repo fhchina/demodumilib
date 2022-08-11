@@ -10,12 +10,26 @@ import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from './settings';
 import { Authenticator } from '@/services/authentication/authenticator'
 import { LocalAuthenticator } from '@/services/authentication/localauthenticator'
-import { loginPath, isDev } from '@/constants'
+import { loginPath, isDev, keycloakOption } from '@/constants'
+import { KeycloakAuthenticator } from './services/authentication/KeycloakAuthenticator'
+import Keycloak from 'keycloak-js'
+import { LoginRunner } from './services/authentication/LoginRunner'
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
+
+// const authenticator = (() => {
+// //	let ka = sessionStorage.getItem("Keycloak")
+// 	let ka = window["KeycloakAuthenticator"] as KeycloakAuthenticator
+// 	if (ka == undefined) {
+// 		ka =  new KeycloakAuthenticator(new Keycloak(keycloakOption))
+// 		window["KeycloakAuthenticator"] = ka
+// 	}
+// 	return ka
+// })()
+const authenticator = new KeycloakAuthenticator(new Keycloak(keycloakOption))
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -23,38 +37,17 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>
   authenticator?: Authenticator
-//   currentUser?: API.CurrentUser;
   loading?: boolean
-//   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+	console.log("getInitialState is calling")
     return {
 	  settings: defaultSettings,
-	  authenticator: new LocalAuthenticator(loginPath),
+	//   authenticator: new LocalAuthenticator(loginPath),
+	  authenticator: authenticator
 	}
-//   const fetchUserInfo = async () => {
-//     try {
-//       const msg = await queryCurrentUser();
-//       return msg.data;
-//     } catch (error) {
-// 	  console.log(error)
-//       history.push(loginPath)
-//     }
-//     return undefined;
-//   };
-//   // 如果不是登录页面，执行
-//   if (history.location.pathname !== loginPath) {
-//     const currentUser = await fetchUserInfo();
-//     return {
-//       fetchUserInfo,
-//       currentUser,
-//       settings: defaultSettings,
-//     };
-//   }
-//   return {
-//     fetchUserInfo,
-//     settings: defaultSettings,
-//   };
 }
+
+const loginRunner = new LoginRunner(authenticator, true)
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
@@ -66,15 +59,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 	  content: initialState?.authenticator?.subject?.name
     },
     footerRender: () => <Footer />,
-    onPageChange: () => {
+    onPageChange: (location) => {
       
       // 如果没有登录，重定向到 login
-	//   console.log("RuntimeLayout onPageChange: ")
+	  console.log("RuntimeLayout onPageChange: ")
 	//   console.log(initialState)
 	//   console.log(initialState?.currentUser)
-	//   console.log(location.pathname)
+	  console.log(location?.pathname)
 	  if (initialState && !initialState.authenticator?.authenticated) {
-		initialState.authenticator?.login()
+		// initialState.authenticator?.login()
+		// loginOnce(initialState?.authenticator)
+		loginRunner.startLogin()
+		// login(initialState?.authenticator)
 	  }
     //   if (!initialState?.currentUser && location.pathname !== loginPath) {
     //     history.push(loginPath);

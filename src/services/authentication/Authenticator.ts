@@ -4,12 +4,12 @@ export interface Authenticator {
 
 	get authenticated(): boolean
 
-	subject?: CurrentUser
+	get subject(): CurrentUser | undefined
+
+	set subject(user: CurrentUser | undefined)
 
 	login(): void
 	
 	logout(): void
-
-	
 
 }
