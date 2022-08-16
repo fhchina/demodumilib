@@ -18,7 +18,7 @@ export class LocalAuthenticator implements Authenticator {
 	}
 
 	logout() {
-		
+		// TODO: To move /pages/user/login/index.tsx logic here.
 	}
 
 	// private 

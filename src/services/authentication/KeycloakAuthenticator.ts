@@ -1,12 +1,8 @@
-
 import { Authenticator } from "./authenticator"
 import type Keycloak from "keycloak-js"
 import type { KeycloakError } from "keycloak-js"
 import { CurrentUser } from "@/services/ant-design-pro/typings"
 import { LoginRunner } from "./LoginRunner"
-// import { useReducer } from "react"
-// import { currentUser } from "../ant-design-pro/api"
-
 
 export class KeycloakAuthenticator implements Authenticator {
 
@@ -76,19 +72,6 @@ export class KeycloakAuthenticator implements Authenticator {
 		console.log(`idTokenParsed: ${this.keycloak.idTokenParsed?.preferred_username}`)
 		console.log(`TokenParsed: ${this.keycloak.tokenParsed?.preferred_username}`)
 		return { name: this.keycloak.idTokenParsed?.preferred_username }
-
-		// const profile = this.keycloak.profile 
-		// if (!profile)
-		// 	return undefined
-
-		// const sub: CurrentUser = {
-		// 	name: profile?.username,
-		// 	// avatar: profile?
-		// 	email: profile?.email,
-		// 	userid: profile?.id,
-		// 	// title: profile?.
-		// }
-		// return sub
 	}
 
 	set subject(_value: CurrentUser | undefined) {
