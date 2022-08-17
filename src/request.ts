@@ -61,13 +61,8 @@ request.interceptors.request.use((url, options) => {
   if (token) {
 	headers['Authorization'] = `Bearer ${token}`
   }
-//   console.log("get global authenticator from initialState")
-//   console.log(keycloak)
-//   console.log(headers)
-  return {
-	url: `${url}&interceptors=yes`,
-	options: { ...options, interceptors: true },
-  }
+  return { url, options }
+
 })
 
 export default request
