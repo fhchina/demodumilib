@@ -84,6 +84,9 @@ export class KeycloakAuthenticator implements Authenticator {
 
 	logout(): void {
 		this.keycloak.logout()
+		LoginRunner.endLogin()
+		this.logined = false
+		this.currentUser = undefined
 	}
 
 }

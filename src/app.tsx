@@ -35,11 +35,15 @@ export async function getShellInitialState(option: ShellOption): Promise<{
   authenticator?: Authenticator
   loading?: boolean
 }> {
-	console.log("getInitialState is calling")
+	console.log("getShellInitialState is calling")
+	const keycloak = new Keycloak(option)
+	const authenticator = new KeycloakAuthenticator(keycloak)
+	// (window as any)["authenticator"] = authenticator as any
+	window.keycloak = keycloak
     return {
 	  settings: defaultSettings,
 	//   authenticator: new LocalAuthenticator(loginPath),
-	  authenticator: new KeycloakAuthenticator(new Keycloak(option))
+	  authenticator//: authenticator
 	}
 }
 
